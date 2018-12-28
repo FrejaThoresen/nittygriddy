@@ -126,4 +126,5 @@ def create_subparsers(subparsers):
                             help="Aliphysics version to use. Available in grid mode only")
     parser_run.add_argument('--max_n_events', type=str, help="Maximal number of events to be processed locally", default="-1")
     parser_run.add_argument('--read_trackref', action='store_true', default=False, help="Use TrackRefs, only available from ESDs")
+    parser_run.add_argument('--make_AOD', action='store_true', default=False, help="Make AODs, only available from ESDs and TrackRefs")
     parser_run.set_defaults(op=run)

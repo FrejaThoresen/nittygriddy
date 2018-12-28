@@ -42,6 +42,8 @@ std::string GetSetting(const std::string settingName) {{
       return "{max_n_events}";
     else if (settingName == "read_trackref")
       return "{read_trackref}";
+    else if (settingName == "make_AOD")
+      return "{make_AOD}";    
     else
       std::cout << "Invalid setting name: " << settingName << std::endl;
     return "";

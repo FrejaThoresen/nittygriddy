@@ -26,6 +26,7 @@
 #include "AliAnalysisGrid.h"
 #include "AliAnalysisAlien.h"
 #include "AliMultSelectionTask.h"
+#include "AliAODHandler.h"
 
 #endif
 #include "GetSetting.C"
@@ -195,7 +196,8 @@ void run(const std::string gridMode="")
     mgr->SetInputEventHandler(aodH);
   }
   if (GetSetting("datatype") == "esd") {
-    AliVEventHandler* esdH = new AliESDInputHandler;
+    AliESDInputHandler* esdH = new AliESDInputHandler;
+    if (GetSetting("make_AOD") == "true") esdH->SetReadFriends(kFALSE);
     mgr->SetInputEventHandler(esdH);
   }
   if (GetSetting("is_mc") == "true" && GetSetting("datatype") == "esd") {
@@ -203,6 +205,11 @@ void run(const std::string gridMode="")
     if (GetSetting("read_trackref") == "true") handler->SetReadTR(kTRUE);
     else handler->SetReadTR(kFALSE);
     mgr->SetMCtruthEventHandler(handler);
+  }
+  if (GetSetting("make_AOD") == "true") {
+    AliAODHandler* aodH = new AliAODHandler();
+    aodH->SetOutputFileName("AliAOD.root");
+    mgr->SetOutputEventHandler(aodH);
   }
 
   if (runmode == kGRID) {
