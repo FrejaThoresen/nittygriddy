@@ -1,4 +1,4 @@
-/* 
+/*
  * This is an automatically generated file. Do yourself a favour and
  * do __not__ edit it by hand. It will be overwritten eventually and
  * you will be sad. Instead, file an issue over at the nittygriddy
@@ -41,7 +41,7 @@ TChain* makeChain() {
     chain = new TChain ("aodTree");
   }
   if (GetSetting("datatype") == "esd") {
-    if (GetSetting("is_mc") == "true") {
+    if (GetSetting("read_trackref") == "true" && GetSetting("runmode") != "grid") {
       chain = new TChain ("TE");  // Tree name in galice.root files
     } else {
       chain = new TChain ("esdTree");  // Tree name in AliESDs.root
@@ -133,7 +133,7 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   // Use run number as output folder names
   plugin->SetOutputToRunNo();
   plugin->SetTTL(atoi(GetSetting("ttl").c_str()));
-  
+
   // These options might be crucial in order to have the merging jdls properly set up, but who knows...
   plugin->SetInputFormat("xml-single");
   // Optionally modify job price (default 1)
@@ -203,7 +203,6 @@ void run(const std::string gridMode="")
   if (GetSetting("is_mc") == "true" && GetSetting("datatype") == "esd") {
     AliMCEventHandler* handler = new AliMCEventHandler;
     if (GetSetting("read_trackref") == "true") handler->SetReadTR(kTRUE);
-    else handler->SetReadTR(kFALSE);
     mgr->SetMCtruthEventHandler(handler);
   }
   if (GetSetting("make_AOD") == "true") {
@@ -214,6 +213,7 @@ void run(const std::string gridMode="")
 
   if (runmode == kGRID) {
     AliAnalysisGrid *alienHandler = CreateAlienHandler(gridMode);
+    alienHandler->SetKeepLogs(kTRUE);
     if (!alienHandler) return;
     mgr->SetGridHandler(alienHandler);
   }
